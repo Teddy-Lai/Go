@@ -19,3 +19,17 @@ var ResourceMSJHBD = &fyne.StaticResource{
 	StaticName:    "MSJHBD.ttf",
 	StaticContent: FontsMSJHBD,
 }
+
+//go:embed icons/cart.svg
+var IconsCart []byte
+var ResourceCart = &fyne.StaticResource{
+	StaticName:    "cart.svg",
+	StaticContent: IconsCart,
+}
+
+//go:embed icons/search.svg
+var IconsSearch []byte
+var ResourceSearch = &fyne.StaticResource{
+	StaticName:    "search.svg",
+	StaticContent: IconsSearch,
+}

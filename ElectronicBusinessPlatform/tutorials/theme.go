@@ -12,6 +12,14 @@ import (
 type MyTheme struct {
 }
 
+func SearchIcon() fyne.Resource {
+	return assets.ResourceSearch
+}
+
+func CartIcon() fyne.Resource {
+	return assets.ResourceCart
+}
+
 func (m MyTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
 	if name == theme.ColorNameBackground {
 		if variant == theme.VariantLight {
