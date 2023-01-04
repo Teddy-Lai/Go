@@ -14,6 +14,9 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+var searchBox = container.NewMax()
+var check = false
+
 func main() {
 	a := app.New()
 	w := a.NewWindow("電商UI")
@@ -43,6 +46,16 @@ func makeTabBtns() *fyne.Container {
 	themeBtn := widget.NewButton("主題", func() {
 		fmt.Println("主題")
 	})
+
+	homeBox := container.NewMax(homeBtn, title)
+	searchBox = search()
+	tabContent := container.NewHBox(homeBox, allBtn, themeBtn, layout.NewSpacer(), searchBox)
+	return tabContent
+}
+
+func search() *fyne.Container {
+	searchEntry := widget.NewEntry()
+	searchEntry.PlaceHolder = "想找什麼商品?"
 	loginBtn := widget.NewButton("登入", func() {
 		fmt.Println("登入")
 	})
@@ -53,20 +66,32 @@ func makeTabBtns() *fyne.Container {
 	cartBtn := widget.NewButtonWithIcon("", cartIcon, func() {
 		fmt.Println("購物車")
 	})
+	cancelBtn := widget.NewButtonWithIcon("", theme.CancelIcon(), func() {
+		fmt.Println("取消")
+		check = !check
+		searchBox.Objects = []fyne.CanvasObject{search()}
+	})
 	searchIcon := tutorials.SearchIcon()
 	searchBtn := widget.NewButtonWithIcon("", searchIcon, func() {
 		fmt.Println("搜尋")
+		check = !check
+		searchBox.Objects = []fyne.CanvasObject{search()}
 	})
-
-	searchEntry := widget.NewEntry()
-	searchEntry.PlaceHolder = "想找什麼商品?"
-	cancelBtn := widget.NewButtonWithIcon("", theme.CancelIcon(), func() {
-		fmt.Println("取消")
-	})
-
-
-	homeBox := container.NewMax(homeBtn, title)
-	searchBox := container.NewHBox(searchEntry, loginBtn, registerBtn, cartBtn, cancelBtn, searchBtn)
-	tabContent := container.NewHBox(homeBox, allBtn, themeBtn, layout.NewSpacer(), searchBox)
-	return tabContent
+	var content *fyne.Container
+	if check {
+		searchBtn.Importance = widget.HighImportance
+		loginBtn.Hide()
+		registerBtn.Hide()
+		cartBtn.Hide()
+		content = container.NewBorder(nil, nil, nil, container.NewHBox(cancelBtn, searchBtn), searchEntry)
+	} else {
+		searchBtn.Importance = widget.MediumImportance
+		cancelBtn.Hide()
+		searchEntry.Hide()
+		content = container.NewHBox(layout.NewSpacer(), loginBtn, registerBtn, cartBtn, searchBtn)
+	}
+	bgRect := canvas.NewRectangle(color.White)
+	bgRect.SetMinSize(fyne.NewSize(300, 40))
+	contentBox := container.NewMax(bgRect, content)
+	return contentBox
 }
